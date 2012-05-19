@@ -1,0 +1,20 @@
+<body>
+    <div id="left-sidebar">
+        <div id="logo"><img src="images/logo.png"></div>
+    </div>
+    <div id="frame">
+        <h2>Crayon</h2>
+        <img src="images/crayon.png">
+    </div>
+    <div id="right-sidebar">
+        <h2>120 <span>points</span></h2>
+        {{> hello}}
+    </div>
+</body>
+
+<template name="hello">
+    <h1>Hello World!</h1>
+    {{greeting}}
+    <input type="button" value="Click" />
+</template>
+
