@@ -1,0 +1,63 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+}
+html, body, ul, ol, li, form, fieldset, legend, h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    padding: 0;
+}
+body {
+    margin: 0;
+    background: #eee;
+    font: 13px Helvetica, Arial, sans-serif;
+    line-height: 1;
+}
+    #left-sidebar {
+        width: 180px;
+        padding: 64px 20px 20px;
+        background: url('../images/background.gif') #b4662e;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+    }
+        #left-sidebar #logo {
+            text-align: center;
+        }
+    #frame {
+        width: 600px;
+        height: 600px;
+        padding: 54px 58px;
+        position: fixed;
+        top: 0;
+        left: 180px;
+        background: #fff;
+        -webkit-box-shadow: 0 4px 7px rgba(0,0,0,.3);
+    }
+        #frame h2 {
+            font-size: 30px;
+            font-weight: normal;
+        }
+        #frame img {
+            position: absolute;
+            top: 185px;
+            left: 210px;
+        }
+    #right-sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 780px;
+        padding: 54px 50px;
+    }
+        #right-sidebar h2 {
+            line-height: 40px;
+            font-size: 20px;
+        }
+            #right-sidebar h2 span {
+                font-weight: normal;
+            }
