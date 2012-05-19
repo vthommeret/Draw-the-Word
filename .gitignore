@@ -1,1 +1,6 @@
-local
+tags
+*.swp
+*.swo
+*.swn
+.fseventsd
+.DS_Store
