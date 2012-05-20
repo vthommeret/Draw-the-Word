@@ -28,9 +28,6 @@ body {
             text-align: center;
         }
     #frame {
-        width: 600px;
-        height: 600px;
-        padding: 54px 58px;
         position: fixed;
         top: 0;
         left: 180px;

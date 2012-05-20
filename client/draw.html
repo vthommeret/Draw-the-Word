@@ -2,10 +2,7 @@
     <div id="left-sidebar">
         <div id="logo"><img src="images/logo.png"></div>
     </div>
-    <div id="frame">
-        <h2>Crayon</h2>
-        <img src="images/crayon.png">
-    </div>
+    <canvas id="frame" width="600" height="600"></canvas>
     <div id="right-sidebar">
         <h2>120 <span>points</span></h2>
         {{> box}}
@@ -15,4 +12,5 @@
 <template name="box">
   <textarea id="inputBox"></textarea>
   <div id="outputBox">{{message}}</div>
+  <input type="button" value="Clear canvas" />
 </template>
