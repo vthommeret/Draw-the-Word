@@ -7,18 +7,30 @@ Template.box.events =
     typedText = $(e.srcElement).val()
     Messages.update({permalink: "sample-box"}, {$set: text: typedText})
 
-  'click input': (e) ->
+  'click .clear': (e) ->
     Strokes.remove({})
     frame = document.getElementById('frame')
     frame.getContext('2d').clearRect(0, 0, frame.width, frame.height)
 
+  'click .start': (e) ->
+    brush.startDrawing()
+
+  'click .stop': (e) ->
+    brush.stopDrawing()
+
 Meteor.startup ->
+  Strokes.remove({})
   RADIUS = 2
   PACKING = 2
 
   frame = document.getElementById('frame')
   ctx = frame.getContext('2d')
-  (new Brush()).initialize(frame: frame, ctx: ctx, radius: RADIUS, packing: PACKING)
+  window.brush = new Brush()
+  window.brush.initialize(frame: frame, ctx: ctx, radius: RADIUS, packing: PACKING, startDrawing: false)
 
-  Meteor.setInterval(->
-  5 * 1000)
+  Strokes.find({}).observe(
+    added: (stroke) ->
+      brush.fillLine(stroke.start, stroke.end, stroke.color) unless brush.isDrawing
+    removed: -> # any remove event is a 'remove all' event, for now
+      ctx.clearRect(0, 0, frame.width, frame.height)
+  )

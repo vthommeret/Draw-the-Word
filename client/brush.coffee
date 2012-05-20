@@ -1,25 +1,34 @@
 class window.Brush
   initialize: (opts) ->
     @isTouch = document.hasOwnProperty('ontouchstart')
-    @last = undefined
+    @last = null
     @lastInFrame = true
     @frame = opts.frame
     @ctx = opts.ctx
     @radius = opts.radius
     @packing = opts.packing
-    document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), (e) =>
-      return if e.target isnt frame
-      e.preventDefault()
+    @startDrawing() if opts.startDrawing
 
-      color = "rgb(#{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())})"
-      moveFn = @move(color)
+  startDrawing: ->
+    document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), @eventListener)
+    @isDrawing = true
 
-      document.addEventListener((if @isTouch then 'touchmove' else 'mousemove'), moveFn)
+  stopDrawing: ->
+    document.removeEventListener((if @isTouch then 'touchstart' else 'mousedown'), @eventListener)
+    @isDrawing = false
 
-      document.addEventListener((if @isTouch then 'touchend' else 'mouseup'), (e) =>
-        document.removeEventListener((if @isTouch then 'touchmove' else 'mousemove'), moveFn)
-        @last = null
-      )
+  eventListener: (e) =>
+    return if e.target isnt @frame
+    e.preventDefault()
+
+    color = "rgb(#{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())})"
+    moveFn = @move(color)
+
+    document.addEventListener((if @isTouch then 'touchmove' else 'mousemove'), moveFn)
+
+    document.addEventListener((if @isTouch then 'touchend' else 'mouseup'), (e) =>
+      document.removeEventListener((if @isTouch then 'touchmove' else 'mousemove'), moveFn)
+      @last = null
     )
 
   move: (color) ->
@@ -37,7 +46,7 @@ class window.Brush
       @lastInFrame = inFrame
 
   fillLine: (start, end, color) ->
-    Strokes.insert(start: start, end: end, color: color)
+    Strokes.insert(start: start, end: end, color: color) if @isDrawing
     color = 'black' unless color?
     r = @radius
     d = r * 2
