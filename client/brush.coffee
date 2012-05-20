@@ -16,7 +16,7 @@ class window.Brush
 
       document.addEventListener((if @isTouch then 'touchmove' else 'mousemove'), moveFn)
 
-      document.addEventListener((if @isTouch then 'touchend' else 'mouseup'), (e) ->
+      document.addEventListener((if @isTouch then 'touchend' else 'mouseup'), (e) =>
         document.removeEventListener((if @isTouch then 'touchmove' else 'mousemove'), moveFn)
         @last = null
       )
