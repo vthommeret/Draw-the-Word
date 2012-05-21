@@ -9,40 +9,68 @@ html, body, ul, ol, li, form, fieldset, legend, h1, h2, h3, h4, h5, h6, p {
     margin: 0;
     padding: 0;
 }
+h1, h2, h3, h4, h5, h6, p {
+    text-rendering: optimizeLegibility;
+    font-weight: normal;
+}
 body {
     margin: 0;
     background: #eee;
-    font: 13px Helvetica, Arial, sans-serif;
+    font: 13px "HelveticaNeue", sans-serif;
     line-height: 1;
 }
     #left-sidebar {
         width: 180px;
-        padding: 64px 20px 20px;
+        padding: 76px 0 20px;
         background: url('../../images/background.gif') #b4662e;
         position: fixed;
         top: 0;
         left: 0;
         bottom: 0;
+        text-align: center;
     }
-        #left-sidebar #logo {
-            text-align: center;
+        #left-sidebar h1 {
+            margin-bottom: 64px;
+            color: #fff;
+            font-family: "HelveticaNeue-Light", sans-serif;
+            font-size: 18px;
+            text-shadow: 0 2px 3px rgba(0, 0, 0, .4);
         }
-    #frame {
+        #left-sidebar #clear-drawing {
+            width: 155px;
+            height: 57px;
+            display: inline-block;
+            background: url('../../images/clear-drawing.png');
+        }
+        #left-sidebar #clear-drawing:active {
+            background-position: 0 -57px;
+        }
+    #outer-frame {
         position: fixed;
         top: 0;
         left: 180px;
-        background: #fff;
-        -webkit-box-shadow: 0 4px 7px rgba(0,0,0,.3);
     }
-        #frame h2 {
-            font-size: 30px;
-            font-weight: normal;
-        }
-        #frame img {
+        #outer-frame h2 {
             position: absolute;
-            top: 185px;
-            left: 210px;
+            top: 49px;
+            left: 51px;
+            font-family: "HelveticaNeue-Medium", sans-serif;
+            font-size: 49px;
+            text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
         }
+        #frame {
+            background: #fff;
+            -webkit-box-shadow: 0 4px 7px rgba(0,0,0,.3);
+        }
+            #frame h2 {
+                font-size: 30px;
+                font-weight: normal;
+            }
+            #frame img {
+                position: absolute;
+                top: 185px;
+                left: 210px;
+            }
     #right-sidebar {
         position: fixed;
         top: 0;

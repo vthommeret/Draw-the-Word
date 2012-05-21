@@ -3,6 +3,7 @@ class window.Brush
     @isTouch = document.hasOwnProperty('ontouchstart')
     @last = null
     @lastInFrame = true
+    @outerFrame = opts.outerFrame
     @frame = opts.frame
     @ctx = opts.ctx
     @radius = opts.radius
@@ -42,8 +43,8 @@ class window.Brush
 
       cursor = if @isTouch then x: e.touches[0].pageX, y: e.touches[0].pageY else x: e.clientX, y: e.clientY
 
-      pos = x: cursor.x - @frame.offsetLeft, y: cursor.y - @frame.offsetTop
-      inFrame = e.target is @frame
+      pos = x: cursor.x - @outerFrame.offsetLeft, y: cursor.y - @outerFrame.offsetTop
+      inFrame = (e.target is @frame) or (e.target.parentElement is @outerFrame)
 
       @fillLine(pos, @last, color) if @lastInFrame or inFrame
 

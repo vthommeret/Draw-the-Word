@@ -1,8 +1,12 @@
 <body>
     <div id="left-sidebar">
-        <div id="logo"><img src="images/logo.png"></div>
+        <h1>Draw the Word</h1>
+        <div id="clear-drawing"></div>
     </div>
-    <canvas id="frame" width="600" height="600"></canvas>
+    <div id="outer-frame">
+        <h2>Crayon</h2>
+        <canvas id="frame" width="600" height="450"></canvas>
+    </div>
     <div id="right-sidebar">
         <h2>120 <span>points</span></h2>
         {{> box}}

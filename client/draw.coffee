@@ -52,9 +52,10 @@ Meteor.startup ->
   Session.set("currentPlayer", currentPlayer or Players.findOne(name: "#{randomNumber}"))
 
   frame = document.getElementById('frame')
+  outerFrame = document.getElementById('outer-frame')
   ctx = frame.getContext('2d')
   brush = new Brush()
-  brush.initialize(frame: frame, ctx: ctx, radius: RADIUS, packing: PACKING, active: false)
+  brush.initialize(frame: frame, outerFrame: outerFrame, ctx: ctx, radius: RADIUS, packing: PACKING, active: false)
 
   Strokes.find({}).observe(
     added: (stroke) ->
