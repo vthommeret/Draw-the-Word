@@ -1,26 +1,25 @@
 <body>
-    <div id="left-sidebar">
-        <h1>Draw the Word</h1>
-        <div id="clear-drawing"></div>
-    </div>
-    <div id="outer-frame">
-        <h2>Crayon</h2>
-        <canvas id="frame" width="600" height="450"></canvas>
-    </div>
-    <div id="right-sidebar">
-        <h2>120 <span>points</span></h2>
-        {{> box}}
-    </div>
+    {{> box}}
 </body>
 
 <template name="box">
-  <textarea id="inputBox"></textarea>
-  <div id="outputBox">{{message}}</div>
-  <input type="button" value="Clear canvas" class="clear" {{#if startButtonEnabled}} disabled="disabled" {{/if}} />
-  <input type="button" value="Start drawing" class="start" {{#unless startButtonEnabled}} disabled="disabled" {{/unless}} />
-  <ul>
-    {{#each players}}
-      <li>{{name}}</li>
-    {{/each}}
-  </ul>
+  <div id="left-sidebar">
+    <h1>Draw the Word</h1>
+    <button class="clear" {{#if startButtonEnabled}}disabled="disabled"{{/if}}></button>
+  </div>
+  <div id="outer-frame">
+    <h2>Crayon</h2>
+    <canvas id="frame" width="600" height="450"></canvas>
+  </div>
+  <div id="right-sidebar">
+    <h2>120 <span>points</span></h2>
+    <textarea id="inputBox"></textarea>
+    <div id="outputBox">{{message}}</div>
+    <input type="button" value="Start drawing" class="start" {{#unless startButtonEnabled}} disabled="disabled" {{/unless}} />
+    <ul>
+      {{#each players}}
+        <li>{{name}}</li>
+      {{/each}}
+    </ul>
+  </div>
 </template>
