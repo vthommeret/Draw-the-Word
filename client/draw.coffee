@@ -1,12 +1,13 @@
 
 Template.box.message = ->
-  if message = Messages.findOne(permalink: "sample-box")
-    message.text
+  return unless messageBox = Session.get("messageBox")
+  if updatedMessageBox = Messages.findOne(permalink: messageBox.permalink)
+    updatedMessageBox.text
 
 Template.box.events =
   'keyup textarea': (e) ->
     typedText = $(e.srcElement).val()
-    Messages.update({permalink: "sample-box"}, {$set: text: typedText})
+    Messages.update({permalink: Session.get("messageBox").permalink}, {$set: text: typedText})
 
   'click .clear': (e) ->
     Strokes.remove({})
@@ -32,6 +33,11 @@ Meteor.startup ->
   RADIUS = 2
   PACKING = 2
   ROOM_NAME = "room2"
+
+  unless messageBox = Messages.findOne(permalink: "sample-box")
+    Messages.insert(permalink: "sample-box", text: "Type something")
+
+  Session.set("messageBox", messageBox or Messages.findOne(permalink: "sample-box"))
 
   unless currentRoom = Rooms.findOne(permalink: ROOM_NAME)
     Rooms.insert(permalink: ROOM_NAME, users: [], activePlayer: null)
