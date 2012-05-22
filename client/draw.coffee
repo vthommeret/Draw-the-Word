@@ -26,6 +26,13 @@ Meteor.startup ->
       currentRoom = Rooms.findOne(name: "My Room")
     Session.set("currentRoomID", currentRoom._id)
 
+    Rooms.find("#{currentRoom._id}").observe
+      changed: (room) ->
+        if room.activePlayerID is Session.get("currentPlayerID")
+          brush.activate()
+        else
+          brush.deactivate()
+
     Meteor.subscribe "allplayers", ->
       currentPlayer = Players.findOne(_id: readCookie("player-id"))
       unless currentPlayer?
@@ -50,13 +57,6 @@ Meteor.startup ->
       brush.currentColor = stroke.color
       _.each stroke.segments, (segment) ->
         brush.fillLine(segment.start, segment.end)
-
-  Rooms.find(name: "My Room").observe
-    changed: (room) ->
-      if room.activePlayerID is Session.get("currentPlayerID")
-        brush.activate()
-      else
-        brush.deactivate()
 
 Meteor.setInterval(->
   if Meteor.status().connected
