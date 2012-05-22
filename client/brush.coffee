@@ -12,15 +12,6 @@ class window.Brush
     @currentColor = "rgb(#{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())})"
     @segments = []
     document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), @_mouseDownEvent)
-    @_updateSession()
-
-  activate: ->
-    @active = true
-    @_updateSession()
-
-  deactivate: ->
-    @active = false
-    @_updateSession()
 
   fillLine: (start, end) ->
     @segments.push(start: start, end: end)
@@ -39,7 +30,7 @@ class window.Brush
     else @_drawCircle(start.x, start.y, r)
 
   _mouseDownEvent: (e) =>
-    return unless @active
+    return unless @_active
     return if e.target isnt @frame
     e.preventDefault()
 
@@ -83,5 +74,5 @@ class window.Brush
     Strokes.insert(segments: @segments, color: @currentColor)
     @segments = []
 
-  _updateSession: ->
-    Session.set("brushIsActive", @active)
+  _active: ->
+    Session.get("brushIsActive")

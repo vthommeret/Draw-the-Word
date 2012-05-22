@@ -29,9 +29,9 @@ Meteor.startup ->
     Rooms.find("#{currentRoom._id}").observe
       changed: (room) ->
         if room.activePlayerID is Session.get("currentPlayerID")
-          brush.activate()
+          Session.set("brushIsActive", true)
         else
-          brush.deactivate()
+          Session.set("brushIsActive", false)
 
     Meteor.subscribe "allplayers", ->
       currentPlayer = Players.findOne(_id: readCookie("player-id"))
@@ -42,7 +42,7 @@ Meteor.startup ->
         currentPlayer = Players.findOne(_id: playerID)
 
       Session.set("currentPlayerID", currentPlayer._id)
-      brush.activate() if currentRoom.activePlayerID is currentPlayer._id
+      Session.set("brushIsActive", currentRoom.activePlayerID is currentPlayer._id)
 
   frame = document.getElementById('frame')
   outerFrame = document.getElementById('outer-frame')
@@ -51,9 +51,9 @@ Meteor.startup ->
   brush.initialize(frame: frame, outerFrame: outerFrame, ctx: ctx, radius: RADIUS, packing: PACKING, active: false)
 
   Meteor.autosubscribe ->
-    ctx.clearRect(0, 0, frame.width, frame.height) unless brush.active
+    ctx.clearRect(0, 0, frame.width, frame.height) unless Session.get("brushIsActive")
     Strokes.find({}).forEach (stroke) ->
-      return if brush.active
+      return if Session.get("brushIsActive")
       brush.currentColor = stroke.color
       _.each stroke.segments, (segment) ->
         brush.fillLine(segment.start, segment.end)
