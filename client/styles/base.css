@@ -15,85 +15,78 @@ h1, h2, h3, h4, h5, h6, p {
 }
 body {
   margin: 0;
-  background: #eee;
+  background: url('../../images/background.gif') #b4662e;
   font: 13px "HelveticaNeue", sans-serif;
   line-height: 1;
 }
-  #left-sidebar {
-    width: 180px;
-    padding: 76px 0 20px;
-    background: url('../../images/background.gif') #b4662e;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    text-align: center;
+  #page {
+    width: 980px;
+    margin: 41px auto;
   }
-    #left-sidebar h1 {
-      margin-bottom: 64px;
-      color: #fff;
-      font-family: "HelveticaNeue-Light", sans-serif;
-      font-size: 18px;
+    #page #left {
+      float: left;
+    }
+      #outer-frame {
+        position: relative;
+      }
+        #outer-frame h2 {
+          position: absolute;
+          top: 49px;
+          left: 51px;
+          font-family: "HelveticaNeue-Medium", sans-serif;
+          font-size: 49px;
+          text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
+          pointer-events: none;
+        }
+        #frame {
+          background: #fff;
+          -webkit-box-shadow: 0 4px 7px rgba(0,0,0,.3);
+        }
+          #frame h2 {
+            font-size: 30px;
+            font-weight: normal;
+          }
+          #frame img {
+            position: absolute;
+            top: 185px;
+            left: 210px;
+          }
+      #footer {
+      }
+        #footer .clear {
+          width: 155px;
+          height: 57px;
+          margin: 26px 0 0 -15px;
+          display: inline-block;
+          background: url('../../images/clear-drawing.png');
+          border: none;
+        }
+        #footer .clear:active {
+          background-position: 0 -57px;
+        }
+        #footer .clear[disabled] {
+          opacity: .5;
+        }
+        #footer .clear[disabled]:active {
+          background-position: 0 0;
+        }
+    #page #right {
+      margin: 76px 0 0 44px;
+      float: left;
       text-shadow: 0 2px 3px rgba(0, 0, 0, .4);
+      font-size: 18px;
+      color: #fff;
     }
-    #left-sidebar .clear {
-      width: 155px;
-      height: 57px;
-      display: inline-block;
-      background: url('../../images/clear-drawing.png');
-      border: none;
-    }
-    #left-sidebar .clear:active {
-      background-position: 0 -57px;
-    }
-    #left-sidebar .clear[disabled] {
-      opacity: .5;
-    }
-    #left-sidebar .clear[disabled]:active {
-      background-position: 0 0;
-    }
-  #outer-frame {
-    position: fixed;
-    top: 0;
-    left: 180px;
-  }
-    #outer-frame h2 {
-      position: absolute;
-      top: 49px;
-      left: 51px;
-      font-family: "HelveticaNeue-Medium", sans-serif;
-      font-size: 49px;
-      text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
-      pointer-events: none;
-    }
-    #frame {
-      background: #fff;
-      -webkit-box-shadow: 0 4px 7px rgba(0,0,0,.3);
-    }
-      #frame h2 {
-        font-size: 30px;
-        font-weight: normal;
+      #page #right #players {
+        margin-bottom: 78px;
       }
-      #frame img {
-        position: absolute;
-        top: 185px;
-        left: 210px;
-      }
-  #right-sidebar {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 780px;
-    padding: 54px 50px;
-  }
-    #right-sidebar h2 {
-      line-height: 40px;
-      font-size: 20px;
-    }
-    #right-sidebar h2 span {
-      font-weight: normal;
-    }
+        #page #right #players .name {
+          padding-right: 38px;
+        }
+        #page #right #players .drawing {
+          width: 15px;
+          background: 0 6px url('../../images/drawing.png') no-repeat;
+        }
 
 .spinner {
   width: 16px;

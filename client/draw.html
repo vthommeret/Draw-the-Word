@@ -1,16 +1,18 @@
 <body>
-  <div id="left-sidebar">
-    <h1>Draw the Word</h1>
-    {{> eraser}}
-  </div>
-  <div id="outer-frame">
-    <h2>Crayon</h2>
-    <canvas id="frame" width="600" height="450"></canvas>
-  </div>
-  <div id="right-sidebar">
-    <h2>120 <span>points</span></h2>
-    {{> start}}
-    {{> players}}
+  <div id="page">
+    <div id="left">
+      <div id="outer-frame">
+        <h2>Crayon</h2>
+        <canvas id="frame" width="600" height="450"></canvas>
+      </div>
+      <div id="footer">
+        {{> eraser}}
+      </div>
+    </div>
+    <div id="right">
+      {{> players}}
+      {{> start}}
+    </div>
   </div>
 </body>
 
@@ -18,14 +20,17 @@
   <button class="clear" {{#if startButtonEnabled}}disabled="disabled"{{/if}}></button>
 </template>
 
-<template name="start">
-  <input type="button" value="Start drawing" class="start" {{#unless startButtonEnabled}} disabled="disabled" {{/unless}} />
+<template name="players">
+  <table id="players">
+    {{#each players}}
+      <tr>
+        <td class="name">{{name}}</td>
+        <td class="drawing"></td>
+      </tr>
+    {{/each}}
+  </table>
 </template>
 
-<template name="players">
-  <ul>
-    {{#each players}}
-      <li>{{name}}</li>
-    {{/each}}
-  </ul>
+<template name="start">
+  <input type="button" value="Start drawing" class="start" {{#unless startButtonEnabled}} disabled="disabled" {{/unless}} />
 </template>
