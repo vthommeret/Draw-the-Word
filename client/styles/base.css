@@ -94,3 +94,15 @@ body {
     #right-sidebar h2 span {
       font-weight: normal;
     }
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  visibility: hidden;
+}
+.spinner.white {
+  background: url('../../images/spinner-white.png');
+}
+.spinner.show {
+  visibility: visible;
+}

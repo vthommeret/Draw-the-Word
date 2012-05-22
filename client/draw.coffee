@@ -1,3 +1,5 @@
+# Templates
+
 startButtonEnabled = ->
   not Session.get("brushIsActive")
 
@@ -19,6 +21,30 @@ Template.box.startButtonEnabled = startButtonEnabled
 Template.box.players = ->
   return unless Session.get("currentRoomID")
   Players.find(roomID: Session.get("currentRoomID"))
+
+# Spinner
+
+class Spinner
+  constructor: (@el, @frames) ->
+    @height = @el.height()
+    @frame = 0
+    @timer = null
+
+  start: ->
+    @timer = setInterval =>
+      @frame = 0 if @frame > @frames - 1
+      @el.css 'background-position', '0 -' + (@height * @frame) + 'px'
+      @frame++
+    , 100
+    @el.addClass 'show'
+
+  stop: ->
+    return unless @timer?
+    clearInterval @timer
+    @timer = null
+    @el.addClass 'show'
+
+# Startup
 
 Meteor.startup ->
   RADIUS = 2
