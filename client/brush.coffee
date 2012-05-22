@@ -84,4 +84,4 @@ class window.Brush
     @segments = []
 
   _updateSession: ->
-    Session.set("brush", @)
+    Session.set("brushIsActive", @active)
