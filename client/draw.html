@@ -1,5 +1,8 @@
 <body>
-    {{> sidebar}}
+  <div id="left-sidebar">
+    <h1>Draw the Word</h1>
+    {{> eraser}}
+  </div>
   <div id="outer-frame">
     <h2>Crayon</h2>
     <canvas id="frame" width="600" height="450"></canvas>
@@ -7,11 +10,8 @@
     {{> box}}
 </body>
 
-<template name="sidebar">
-  <div id="left-sidebar">
-    <h1>Draw the Word</h1>
-    <button class="clear" {{#if startButtonEnabled}}disabled="disabled"{{/if}}></button>
-  </div>
+<template name="eraser">
+  <button class="clear" {{#if startButtonEnabled}}disabled="disabled"{{/if}}></button>
 </template>
 
 <template name="box">

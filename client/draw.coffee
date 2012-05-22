@@ -1,9 +1,9 @@
 startButtonEnabled = ->
   not Session.get("brushIsActive")
 
-Template.sidebar.startButtonEnabled = startButtonEnabled
+Template.eraser.startButtonEnabled = startButtonEnabled
 
-Template.sidebar.events =
+Template.eraser.events =
   'click .clear': (e) ->
     Strokes.remove({})
     frame = document.getElementById("frame")
