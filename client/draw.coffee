@@ -44,10 +44,9 @@ Meteor.startup ->
   brush.initialize(frame: frame, outerFrame: outerFrame, ctx: ctx, radius: RADIUS, packing: PACKING, active: false)
 
   Meteor.autosubscribe ->
-    console.log("autosubscribe block")
-    return if brush.active
-    ctx.clearRect(0, 0, frame.width, frame.height)
+    ctx.clearRect(0, 0, frame.width, frame.height) unless brush.active
     Strokes.find({}).forEach (stroke) ->
+      return if brush.active
       brush.currentColor = stroke.color
       _.each stroke.segments, (segment) ->
         brush.fillLine(segment.start, segment.end)
