@@ -10,7 +10,7 @@ Template.box.startButtonEnabled = ->
 
 Template.box.players = ->
   return unless Session.get("currentRoomID")
-  Rooms.findOne("#{Session.get("currentRoomID")}").players
+  Players.find(roomID: Session.get("currentRoomID"))
 
 Meteor.startup ->
   RADIUS = 2
@@ -19,7 +19,7 @@ Meteor.startup ->
   Meteor.subscribe "allrooms", ->
     currentRoom = Rooms.findOne(name: "My Room")
     unless currentRoom?
-      Rooms.insert(name: "My Room", players: [], activePlayerID: null)
+      Rooms.insert(name: "My Room", activePlayerID: null)
       currentRoom = Rooms.findOne(name: "My Room")
     Session.set("currentRoomID", currentRoom._id)
 
@@ -27,13 +27,19 @@ Meteor.startup ->
       currentPlayer = Players.findOne(_id: readCookie("player-id"))
       unless currentPlayer?
         name = prompt("Enter your name:", "verlo")
-        playerID = Players.insert(name: name)
+        playerID = Players.insert(name: name, last_keepalive: new Date().getTime(), roomID: currentRoom._id)
         createCookie("player-id", playerID, 365)
         currentPlayer = Players.findOne(_id: playerID)
-        Rooms.update("#{Session.get("currentRoomID")}", $push: {players: currentPlayer})
 
       Session.set("currentPlayerID", currentPlayer._id)
       brush.activate() if currentRoom.activePlayerID is currentPlayer._id
+
+      # to do, subscribe to 'strokesforthisroom' and have corresponding publish function
+      # this will also make it so we can populate the canvas when the user joins
+
+
+
+
 
   frame = document.getElementById('frame')
   outerFrame = document.getElementById('outer-frame')
@@ -56,3 +62,9 @@ Meteor.startup ->
         brush.activate()
       else
         brush.deactivate()
+
+Meteor.setInterval(->
+  if Meteor.status().connected
+    console.log "sending keepalive"
+    Meteor.call("keepalive", Session.get("currentPlayerID"))
+5 * 1000)
