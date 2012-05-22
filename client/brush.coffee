@@ -13,7 +13,7 @@ class window.Brush
     document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), @_mouseDownEvent)
 
   fillLine: (start, end) ->
-    @segments.push(start: start, end: end)
+    @segments.push(start: start, end: end) if @_active()
     r = @radius
     d = r * 2
 
