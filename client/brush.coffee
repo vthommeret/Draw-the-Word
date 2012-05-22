@@ -8,13 +8,11 @@ class window.Brush
     @ctx = opts.ctx
     @radius = opts.radius
     @packing = opts.packing
-    @currentColor = "black"
+    @currentColor = "#28d2f1" # sky blue
     @segments = []
     document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), @_mouseDownEvent)
 
   drawSegment: (start, end) ->
-    @currentColor = "rgb(#{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())})"
-
     r = @radius
     d = r * 2
 
@@ -33,6 +31,8 @@ class window.Brush
     return unless @_active()
     return if e.target isnt @frame
     e.preventDefault()
+
+    # @currentColor = "rgb(#{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())})"
 
     moveFn = @_move()
     upFn = (e) =>
@@ -73,7 +73,7 @@ class window.Brush
     Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2))
 
   _flush: ->
-    Strokes.insert(segments: @segments)
+    Strokes.insert(segments: @segments, color: @currentColor)
     @segments = []
 
   _active: ->
