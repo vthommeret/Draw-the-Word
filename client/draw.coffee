@@ -12,16 +12,16 @@ Template.box.events =
     Strokes.remove({})
 
   'click .start': (e) =>
-    Rooms.update({permalink: Session.get("currentRoom").permalink}, {$set: activePlayer: Session.get("player_id")})
+    Rooms.update({permalink: Session.get("currentRoom").permalink}, {$set: activePlayer: Session.get("currentPlayer")})
 
 Template.box.startButtonEnabled = ->
   return unless currentRoom = Session.get("currentRoom")
-  return unless currentPlayer = Session.get("player_id")
+  return unless currentPlayer = Session.get("currentPlayer")
 
   roomActivePlayer = Rooms.findOne(permalink: currentRoom.permalink).activePlayer
   return true unless roomActivePlayer
 
-  roomActivePlayer isnt currentPlayer
+  roomActivePlayer._id isnt currentPlayer._id
 
 Template.box.players = ->
   Players.find({})
