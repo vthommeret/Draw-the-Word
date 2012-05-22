@@ -56,12 +56,11 @@ Meteor.startup ->
   brush.initialize(frame: frame, outerFrame: outerFrame, ctx: ctx, radius: RADIUS, packing: PACKING)
 
   Meteor.autosubscribe ->
-    ctx.clearRect(0, 0, frame.width, frame.height) unless Session.get("brushIsActive")
+    ctx.clearRect(0, 0, frame.width, frame.height)
     Strokes.find({}).forEach (stroke) ->
-      return if Session.get("brushIsActive")
       brush.currentColor = stroke.color
       _.each stroke.segments, (segment) ->
-        brush.fillLine(segment.start, segment.end)
+        brush.drawSegment(segment.start, segment.end)
 
 Meteor.setInterval(->
   if Meteor.status().connected

@@ -12,9 +12,7 @@ class window.Brush
     @segments = []
     document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), @_mouseDownEvent)
 
-  fillLine: (start, end) ->
-    @segments.push(start: start, end: end) if @_active()
-
+  drawSegment: (start, end) ->
     @currentColor = "rgb(#{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())})"
 
     r = @radius
@@ -52,12 +50,14 @@ class window.Brush
 
       cursor = if @isTouch then x: e.touches[0].pageX, y: e.touches[0].pageY else x: e.clientX, y: e.clientY
 
-      pos = x: cursor.x - @outerFrame.offsetLeft, y: cursor.y - @outerFrame.offsetTop
+      start = x: cursor.x - @outerFrame.offsetLeft, y: cursor.y - @outerFrame.offsetTop
       inFrame = (e.target is @frame) or (e.target.parentElement is @outerFrame)
 
-      @fillLine(pos, @last) if @lastInFrame or inFrame
+      if @lastInFrame or inFrame
+        @drawSegment(start, @last)
+        @segments.push(start: start, end: @last)
 
-      @last = pos
+      @last = start
       @lastInFrame = inFrame
 
   _drawCircle: (x, y, radius) ->
