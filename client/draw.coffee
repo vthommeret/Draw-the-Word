@@ -22,6 +22,11 @@ Template.players.players = ->
   return unless Session.get("currentRoomID")
   Players.find(roomID: Session.get("currentRoomID"))
 
+Template.players.isDrawing = ->
+  roomId = Session.get("currentRoomID").toString()
+  room = Rooms.findOne(roomId)
+  room.activePlayerID is this._id
+
 # Spinner
 
 class Spinner

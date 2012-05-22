@@ -78,8 +78,12 @@ body {
       color: #fff;
     }
       #page #right #players {
-        margin-bottom: 78px;
+        margin-bottom: 38px;
+        border-collapse: collapse;
       }
+        #page #right #players td {
+          padding: 0 0 11px;
+        }
         #page #right #players .name {
           padding-right: 38px;
         }

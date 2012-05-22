@@ -22,12 +22,14 @@
 
 <template name="players">
   <table id="players">
-    {{#each players}}
-      <tr>
-        <td class="name">{{name}}</td>
-        <td class="drawing"></td>
-      </tr>
-    {{/each}}
+    <tbody>
+      {{#each players}}
+        <tr>
+          <td class="name">{{name}}</td>
+          <td {{#if isDrawing}}class="drawing"{{/if}}></td>
+        </tr>
+      {{/each}}
+    </tbody>
   </table>
 </template>
 
