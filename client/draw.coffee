@@ -12,13 +12,13 @@ Template.eraser.events =
     ctx = frame.getContext("2d")
     ctx.clearRect(0, 0, frame.width, frame.height)
 
-Template.box.events =
+Template.start.events =
   'click .start': (e) =>
     Rooms.update("#{Session.get("currentRoomID")}", {$set: activePlayerID: Session.get("currentPlayerID")})
 
-Template.box.startButtonEnabled = startButtonEnabled
+Template.start.startButtonEnabled = startButtonEnabled
 
-Template.box.players = ->
+Template.players.players = ->
   return unless Session.get("currentRoomID")
   Players.find(roomID: Session.get("currentRoomID"))
 

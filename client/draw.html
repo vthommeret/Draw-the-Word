@@ -7,21 +7,25 @@
     <h2>Crayon</h2>
     <canvas id="frame" width="600" height="450"></canvas>
   </div>
-    {{> box}}
+  <div id="right-sidebar">
+    <h2>120 <span>points</span></h2>
+    {{> start}}
+    {{> players}}
+  </div>
 </body>
 
 <template name="eraser">
   <button class="clear" {{#if startButtonEnabled}}disabled="disabled"{{/if}}></button>
 </template>
 
-<template name="box">
-  <div id="right-sidebar">
-    <h2>120 <span>points</span></h2>
-    <input type="button" value="Start drawing" class="start" {{#unless startButtonEnabled}} disabled="disabled" {{/unless}} />
-    <ul>
-      {{#each players}}
-        <li>{{name}}</li>
-      {{/each}}
-    </ul>
-  </div>
+<template name="start">
+  <input type="button" value="Start drawing" class="start" {{#unless startButtonEnabled}} disabled="disabled" {{/unless}} />
+</template>
+
+<template name="players">
+  <ul>
+    {{#each players}}
+      <li>{{name}}</li>
+    {{/each}}
+  </ul>
 </template>
