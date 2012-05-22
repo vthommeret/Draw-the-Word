@@ -9,35 +9,51 @@ class window.Brush
     @radius = opts.radius
     @packing = opts.packing
     @activate() if opts.active
-    @strokes = []
+    @currentColor = "rgb(#{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())})"
+    @segments = []
     @_updateSession()
 
   activate: ->
-    document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), @eventListener)
+    document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), @_eventListener)
     @active = true
     @_updateSession()
 
   deactivate: ->
-    document.removeEventListener((if @isTouch then 'touchstart' else 'mousedown'), @eventListener)
+    document.removeEventListener((if @isTouch then 'touchstart' else 'mousedown'), @_eventListener)
     @active = false
     @_updateSession()
 
-  eventListener: (e) =>
+  fillLine: (start, end) ->
+    @segments.push(start: start, end: end)
+    r = @radius
+    d = r * 2
+
+    if end
+      @_drawCircle(end.x, end.y, r)
+      dots = @packing * @_dist(start, end) / d
+      for i in [0...dots]
+        @_drawCircle(
+          start.x + (i + 1) * (end.x - start.x) / (dots + 1),
+          start.y + (i + 1) * (end.y - start.y) / (dots + 1),
+          r
+        )
+    else @_drawCircle(start.x, start.y, r)
+
+  _eventListener: (e) =>
     return if e.target isnt @frame
     e.preventDefault()
 
-    color = "rgb(#{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())})"
-    moveFn = @move(color)
+    moveFn = @_move()
 
     document.addEventListener((if @isTouch then 'touchmove' else 'mousemove'), moveFn)
 
     document.addEventListener((if @isTouch then 'touchend' else 'mouseup'), (e) =>
-      @flush()
+      @_flush()
       document.removeEventListener((if @isTouch then 'touchmove' else 'mousemove'), moveFn)
       @last = null
     )
 
-  move: (color) ->
+  _move: ->
     (e) =>
       e.preventDefault()
 
@@ -46,48 +62,26 @@ class window.Brush
       pos = x: cursor.x - @outerFrame.offsetLeft, y: cursor.y - @outerFrame.offsetTop
       inFrame = (e.target is @frame) or (e.target.parentElement is @outerFrame)
 
-      @fillLine(pos, @last, color) if @lastInFrame or inFrame
+      @fillLine(pos, @last) if @lastInFrame or inFrame
 
       @last = pos
       @lastInFrame = inFrame
 
-  fillLine: (start, end, color) ->
-    @strokes.push(start: start, end: end, color: color) if @active
-    color = 'black' unless color?
-    r = @radius
-    d = r * 2
-
-    if end
-      @drawCircle(end.x, end.y, r, color)
-      dots = @packing * @dist(start, end) / d
-      for i in [0...dots]
-        @drawCircle(
-          start.x + (i + 1) * (end.x - start.x) / (dots + 1),
-          start.y + (i + 1) * (end.y - start.y) / (dots + 1),
-          r,
-          color
-        )
-    else @drawCircle(start.x, start.y, r, color)
-
-  drawCircle: (x, y, radius, color) ->
-    color = 'black' unless color?
-
+  _drawCircle: (x, y, radius) ->
     @ctx.save()
-    @ctx.fillStyle = color
+    @ctx.fillStyle = @currentColor
     @ctx.beginPath()
     @ctx.arc(x, y, radius, 0, Math.PI * 2)
     @ctx.closePath()
     @ctx.fill()
     @ctx.restore()
 
-  dist: (start, end) ->
+  _dist: (start, end) ->
     Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2))
 
-  flush: ->
-    _.each(@strokes, (stroke) ->
-      Strokes.insert(start: stroke.start, end: stroke.end, color: stroke.color)
-    )
-    @strokes = []
+  _flush: ->
+    Strokes.insert(segments: @segments, color: @currentColor)
+    @segments = []
 
   _updateSession: ->
     Session.set("brush", @)

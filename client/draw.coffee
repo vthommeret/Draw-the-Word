@@ -1,4 +1,3 @@
-
 Template.box.message = ->
   return unless messageBox = Session.get("messageBox")
   if updatedMessageBox = Messages.findOne(permalink: messageBox.permalink)
@@ -12,19 +11,17 @@ Template.box.events =
   'click .clear': (e) ->
     Strokes.remove({})
 
-  # Find a way to get rid of all this jquery code via Meteor
-
   'click .start': (e) =>
-    Rooms.update({permalink: Session.get("currentRoom").permalink}, {$set: activePlayer: Session.get("currentPlayer")})
+    Rooms.update({permalink: Session.get("currentRoom").permalink}, {$set: activePlayer: Session.get("player_id")})
 
 Template.box.startButtonEnabled = ->
   return unless currentRoom = Session.get("currentRoom")
-  return unless currentPlayer = Session.get("currentPlayer")
+  return unless currentPlayer = Session.get("player_id")
 
   roomActivePlayer = Rooms.findOne(permalink: currentRoom.permalink).activePlayer
   return true unless roomActivePlayer
 
-  roomActivePlayer._id isnt currentPlayer._id
+  roomActivePlayer isnt currentPlayer
 
 Template.box.players = ->
   Players.find({})
@@ -44,12 +41,15 @@ Meteor.startup ->
 
   Session.set("currentRoom", currentRoom or Rooms.findOne(permalink: ROOM_NAME))
 
-  randomNumber = Math.floor(Math.random() * 100)
+  Meteor.subscribe("allplayers", ->
+    currentPlayer = Players.findOne(_id: readCookie("player-id"))
+    unless currentPlayer?
+      name = prompt("Enter your name:", "verlo")
+      playerID = Players.insert(name: name)
+      createCookie("player-id", playerID, 365)
+      currentPlayer = Players.findOne(_id: playerID)
 
-  unless currentPlayer = Players.findOne(name: "#{randomNumber}")
-    Players.insert(name: "#{randomNumber}")
-
-  Session.set("currentPlayer", currentPlayer or Players.findOne(name: "#{randomNumber}"))
+    Session.set("currentPlayer", currentPlayer))
 
   frame = document.getElementById('frame')
   outerFrame = document.getElementById('outer-frame')
@@ -59,7 +59,10 @@ Meteor.startup ->
 
   Strokes.find({}).observe(
     added: (stroke) ->
-      brush.fillLine(stroke.start, stroke.end, stroke.color) unless brush.active
+      unless brush.active
+        brush.currentColor = stroke.color
+        _.each(stroke.segments, (segment) ->
+          brush.fillLine(segment.start, segment.end))
     removed: -> # any remove event is a 'remove all' event, for now
       ctx.clearRect(0, 0, frame.width, frame.height)
   )
