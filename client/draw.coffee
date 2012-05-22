@@ -1,15 +1,20 @@
-Template.box.events =
+startButtonEnabled = ->
+  not Session.get("brushIsActive")
+
+Template.sidebar.startButtonEnabled = startButtonEnabled
+
+Template.sidebar.events =
   'click .clear': (e) ->
     Strokes.remove({})
     frame = document.getElementById("frame")
     ctx = frame.getContext("2d")
     ctx.clearRect(0, 0, frame.width, frame.height)
 
+Template.box.events =
   'click .start': (e) =>
     Rooms.update("#{Session.get("currentRoomID")}", {$set: activePlayerID: Session.get("currentPlayerID")})
 
-Template.box.startButtonEnabled = ->
-  not Session.get("brushIsActive")
+Template.box.startButtonEnabled = startButtonEnabled
 
 Template.box.players = ->
   return unless Session.get("currentRoomID")

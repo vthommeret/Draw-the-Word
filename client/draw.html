@@ -1,16 +1,20 @@
 <body>
-    {{> box}}
-</body>
-
-<template name="box">
-  <div id="left-sidebar">
-    <h1>Draw the Word</h1>
-    <button class="clear" {{#if startButtonEnabled}}disabled="disabled"{{/if}}></button>
-  </div>
+    {{> sidebar}}
   <div id="outer-frame">
     <h2>Crayon</h2>
     <canvas id="frame" width="600" height="450"></canvas>
   </div>
+    {{> box}}
+</body>
+
+<template name="sidebar">
+  <div id="left-sidebar">
+    <h1>Draw the Word</h1>
+    <button class="clear" {{#if startButtonEnabled}}disabled="disabled"{{/if}}></button>
+  </div>
+</template>
+
+<template name="box">
   <div id="right-sidebar">
     <h2>120 <span>points</span></h2>
     <input type="button" value="Start drawing" class="start" {{#unless startButtonEnabled}} disabled="disabled" {{/unless}} />
