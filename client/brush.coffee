@@ -8,12 +8,15 @@ class window.Brush
     @ctx = opts.ctx
     @radius = opts.radius
     @packing = opts.packing
-    @currentColor = "rgb(#{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())})"
+    @currentColor = "black"
     @segments = []
     document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), @_mouseDownEvent)
 
   fillLine: (start, end) ->
     @segments.push(start: start, end: end) if @_active()
+
+    @currentColor = "rgb(#{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())})"
+
     r = @radius
     d = r * 2
 
@@ -70,7 +73,7 @@ class window.Brush
     Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2))
 
   _flush: ->
-    Strokes.insert(segments: @segments, color: @currentColor)
+    Strokes.insert(segments: @segments)
     @segments = []
 
   _active: ->
