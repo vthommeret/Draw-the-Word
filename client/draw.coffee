@@ -1,5 +1,21 @@
 # Templates
 
+Session.set('currentWord', 'Crayon')
+
+Template.title.text = ->
+  word = Session.get('currentWord')
+  if Session.get('brushIsActive')
+    word
+  else
+    blanks = ''
+    _(word.length).times(->
+      blanks += '_'
+    )
+    blanks
+
+Template.title.isBlank = ->
+  not Session.get('brushIsActive')
+
 startButtonEnabled = ->
   not Session.get("brushIsActive")
 

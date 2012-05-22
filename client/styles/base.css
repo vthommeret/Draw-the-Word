@@ -29,7 +29,7 @@ body {
       #outer-frame {
         position: relative;
       }
-        #outer-frame h2 {
+        #outer-frame .title {
           position: absolute;
           top: 49px;
           left: 51px;
@@ -38,19 +38,13 @@ body {
           text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
           pointer-events: none;
         }
+        #outer-frame .title.blank {
+          letter-spacing: .2em;
+        }
         #frame {
           background: #fff;
           -webkit-box-shadow: 0 4px 7px rgba(0,0,0,.3);
         }
-          #frame h2 {
-            font-size: 30px;
-            font-weight: normal;
-          }
-          #frame img {
-            position: absolute;
-            top: 185px;
-            left: 210px;
-          }
       #footer {
       }
         #footer .clear {

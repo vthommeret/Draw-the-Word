@@ -2,7 +2,7 @@
   <div id="page">
     <div id="left">
       <div id="outer-frame">
-        <h2>Crayon</h2>
+        {{>title}}
         <canvas id="frame" width="600" height="450"></canvas>
       </div>
       <div id="footer">
@@ -15,6 +15,10 @@
     </div>
   </div>
 </body>
+
+<template name="title">
+  <h2 class="title {{#if isBlank}}blank{{/if}}">{{text}}</h2>
+</template>
 
 <template name="eraser">
   <button class="clear" {{#if startButtonEnabled}}disabled="disabled"{{/if}}></button>
