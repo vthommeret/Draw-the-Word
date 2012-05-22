@@ -1,4 +1,4 @@
-# Templates
+# Title template
 
 Session.set('currentWord', 'Crayon')
 
@@ -16,6 +16,8 @@ Template.title.text = ->
 Template.title.isBlank = ->
   not Session.get('brushIsActive')
 
+# Eraser template
+
 startButtonEnabled = ->
   not Session.get("brushIsActive")
 
@@ -28,11 +30,15 @@ Template.eraser.events =
     ctx = frame.getContext("2d")
     ctx.clearRect(0, 0, frame.width, frame.height)
 
+# Start template
+
 Template.start.events =
   'click .start': (e) =>
     Rooms.update("#{Session.get("currentRoomID")}", {$set: activePlayerID: Session.get("currentPlayerID")})
 
 Template.start.startButtonEnabled = startButtonEnabled
+
+# Players template
 
 Template.players.players = ->
   return unless Session.get("currentRoomID")
@@ -42,6 +48,18 @@ Template.players.isDrawing = ->
   roomId = Session.get("currentRoomID").toString()
   room = Rooms.findOne(roomId)
   room.activePlayerID is this._id
+
+# Guess template
+
+Template.guess.events =
+  'submit #guess-form': (e) ->
+    e.preventDefault()
+    guess = $('#guess')
+    guess.val('');
+    guess.blur()
+
+Template.guess.isDrawing = ->
+  Session.get('brushIsActive')
 
 # Spinner
 

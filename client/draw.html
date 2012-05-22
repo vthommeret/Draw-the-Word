@@ -7,21 +7,18 @@
       </div>
       <div id="footer">
         {{> eraser}}
+        {{> start}}
       </div>
     </div>
     <div id="right">
       {{> players}}
-      {{> start}}
+      {{> guess}}
     </div>
   </div>
 </body>
 
 <template name="title">
   <h2 class="title {{#if isBlank}}blank{{/if}}">{{text}}</h2>
-</template>
-
-<template name="eraser">
-  <button class="clear" {{#if startButtonEnabled}}disabled="disabled"{{/if}}></button>
 </template>
 
 <template name="players">
@@ -35,6 +32,16 @@
       {{/each}}
     </tbody>
   </table>
+</template>
+
+<template name="guess">
+  <form id="guess-form">
+    <input id="guess" type="text" placeholder="Guess the word" {{#if isDrawing}}disabled="disabled"{{/if}}>
+  </form>
+</template>
+
+<template name="eraser">
+  <button class="clear" {{#if startButtonEnabled}}disabled="disabled"{{/if}}></button>
 </template>
 
 <template name="start">

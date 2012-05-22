@@ -46,11 +46,12 @@ body {
           -webkit-box-shadow: 0 4px 7px rgba(0,0,0,.3);
         }
       #footer {
+        margin-top: 26px;
       }
         #footer .clear {
           width: 155px;
           height: 57px;
-          margin: 26px 0 0 -15px;
+          margin: 0 0 0 -15px;
           display: inline-block;
           background: url('../../images/clear-drawing.png');
           border: none;
@@ -64,8 +65,17 @@ body {
         #footer .clear[disabled]:active {
           background-position: 0 0;
         }
+        #footer .start {
+          width: 90px;
+          position: relative;
+          top: 10px;
+          float: right;
+        }
+        #footer .start[disabled] {
+          opacity: .4;
+        }
     #page #right {
-      margin: 76px 0 0 44px;
+      margin: 76px 0 0 39px;
       float: left;
       text-shadow: 0 2px 3px rgba(0, 0, 0, .4);
       font-size: 18px;
@@ -85,6 +95,21 @@ body {
           width: 15px;
           background: 0 6px url('../../images/drawing.png') no-repeat;
         }
+      #page #right #guess {
+        padding: 4px 7px 6px;
+        -webkit-appearance: none;
+        border-radius: 3px;
+        border: none;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, .12),
+          0 1px rgba(255, 255, 255, .15),
+          inset 0 1px 3px rgba(0, 0, 0, .55);
+        font-family: "HelveticaNeue";
+        font-size: 18px;
+        outline: none;
+      }
+      #page #right #guess[disabled] {
+        opacity: .3;
+      }
 
 .spinner {
   width: 16px;
