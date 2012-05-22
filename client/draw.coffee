@@ -1,6 +1,9 @@
 Template.box.events =
   'click .clear': (e) ->
     Strokes.remove({})
+    frame = document.getElementById("frame")
+    ctx = frame.getContext("2d")
+    ctx.clearRect(0, 0, frame.width, frame.height)
 
   'click .start': (e) =>
     Rooms.update("#{Session.get("currentRoomID")}", {$set: activePlayerID: Session.get("currentPlayerID")})
@@ -34,27 +37,20 @@ Meteor.startup ->
       Session.set("currentPlayerID", currentPlayer._id)
       brush.activate() if currentRoom.activePlayerID is currentPlayer._id
 
-      # to do, subscribe to 'strokesforthisroom' and have corresponding publish function
-      # this will also make it so we can populate the canvas when the user joins
-
-
-
-
-
   frame = document.getElementById('frame')
   outerFrame = document.getElementById('outer-frame')
   ctx = frame.getContext('2d')
   brush = new Brush()
   brush.initialize(frame: frame, outerFrame: outerFrame, ctx: ctx, radius: RADIUS, packing: PACKING, active: false)
 
-  Strokes.find({}).observe
-    added: (stroke) ->
-      unless brush.active
-        brush.currentColor = stroke.color
-        _.each stroke.segments, (segment) ->
-          brush.fillLine(segment.start, segment.end)
-    removed: -> # any remove event is a 'remove all' event, for now
-      ctx.clearRect(0, 0, frame.width, frame.height)
+  Meteor.autosubscribe ->
+    console.log("autosubscribe block")
+    return if brush.active
+    ctx.clearRect(0, 0, frame.width, frame.height)
+    Strokes.find({}).forEach (stroke) ->
+      brush.currentColor = stroke.color
+      _.each stroke.segments, (segment) ->
+        brush.fillLine(segment.start, segment.end)
 
   Rooms.find(name: "My Room").observe
     changed: (room) ->
@@ -65,6 +61,5 @@ Meteor.startup ->
 
 Meteor.setInterval(->
   if Meteor.status().connected
-    console.log "sending keepalive"
     Meteor.call("keepalive", Session.get("currentPlayerID"))
 5 * 1000)

@@ -11,15 +11,14 @@ class window.Brush
     @activate() if opts.active
     @currentColor = "rgb(#{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())})"
     @segments = []
+    document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), @_mouseDownEvent)
     @_updateSession()
 
   activate: ->
-    document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), @_eventListener)
     @active = true
     @_updateSession()
 
   deactivate: ->
-    document.removeEventListener((if @isTouch then 'touchstart' else 'mousedown'), @_eventListener)
     @active = false
     @_updateSession()
 
@@ -39,19 +38,20 @@ class window.Brush
         )
     else @_drawCircle(start.x, start.y, r)
 
-  _eventListener: (e) =>
+  _mouseDownEvent: (e) =>
+    return unless @active
     return if e.target isnt @frame
     e.preventDefault()
 
     moveFn = @_move()
+    upFn = (e) =>
+      document.removeEventListener((if @isTouch then 'touchmove' else 'mousemove'), moveFn)
+      document.removeEventListener((if @isTouch then 'touchend' else 'mouseup'), upFn)
+      @_flush()
+      @last = null
 
     document.addEventListener((if @isTouch then 'touchmove' else 'mousemove'), moveFn)
-
-    document.addEventListener((if @isTouch then 'touchend' else 'mouseup'), (e) =>
-      @_flush()
-      document.removeEventListener((if @isTouch then 'touchmove' else 'mousemove'), moveFn)
-      @last = null
-    )
+    document.addEventListener((if @isTouch then 'touchend' else 'mouseup'), upFn)
 
   _move: ->
     (e) =>
