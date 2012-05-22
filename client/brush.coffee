@@ -8,7 +8,6 @@ class window.Brush
     @ctx = opts.ctx
     @radius = opts.radius
     @packing = opts.packing
-    @activate() if opts.active
     @currentColor = "rgb(#{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())})"
     @segments = []
     document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), @_mouseDownEvent)
@@ -30,7 +29,7 @@ class window.Brush
     else @_drawCircle(start.x, start.y, r)
 
   _mouseDownEvent: (e) =>
-    return unless @_active
+    return unless @_active()
     return if e.target isnt @frame
     e.preventDefault()
 
