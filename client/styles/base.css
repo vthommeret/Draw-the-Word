@@ -64,6 +64,7 @@ body {
       font-family: "HelveticaNeue-Medium", sans-serif;
       font-size: 49px;
       text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
+      pointer-events: none;
     }
     #frame {
       background: #fff;
