@@ -89,6 +89,11 @@ Meteor.startup ->
   RADIUS = 2
   PACKING = 2
 
+  if /mobile/i.test(navigator.userAgent) && !location.hash
+    setTimeout(->
+      window.scrollTo(0, 1)
+    , 1000)
+
   Meteor.subscribe "allrooms", ->
     currentRoom = Rooms.findOne(name: "My Room")
     unless currentRoom?

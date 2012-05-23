@@ -84,17 +84,22 @@ body {
       #page #right #players {
         margin-bottom: 38px;
         border-collapse: collapse;
+        display: table;
       }
-        #page #right #players td {
-          padding: 0 0 11px;
+        #page #right #players .row {
+          display: table-row;
         }
-        #page #right #players .name {
-          padding-right: 38px;
-        }
-        #page #right #players .drawing {
-          width: 15px;
-          background: 0 6px url('../../images/drawing.png') no-repeat;
-        }
+          #page #right #players .cell {
+            padding: 0 0 11px;
+            display: table-cell;
+          }
+          #page #right #players .name {
+            padding-right: 38px;
+          }
+          #page #right #players .drawing {
+            width: 15px;
+            background: 0 6px url('../../images/drawing.png') no-repeat;
+          }
       #page #right #guess {
         padding: 4px 7px 6px;
         -webkit-appearance: none;
@@ -106,6 +111,12 @@ body {
         font-family: "HelveticaNeue";
         font-size: 18px;
         outline: none;
+
+        /** TEMP */
+
+        position: absolute;
+        top: -10000px;
+        left: -10000px;
       }
       #page #right #guess[disabled] {
         opacity: .3;
@@ -121,4 +132,40 @@ body {
 }
 .spinner.show {
   visibility: visible;
+}
+
+/** Mobile styles */
+
+@media screen and (orientation:portrait) {
+  #page {
+    width: auto;
+    margin: 0;
+  }
+    #page #right {
+      margin-top: 12px;
+      clear: left;
+    }
+      #page #right #players {
+        display: block;
+        font-size: 24px;
+      }
+        #page #right #players .row {
+          display: block;
+        }
+        #page #right #players .row-drawing {
+          font-family: "HelveticaNeue-Bold", sans-serif;
+        }
+          #page #right #players .cell {
+            display: inline-block;
+          }
+          #page #right #players .row-drawing .drawing {
+            display: none;
+          }
+        #footer .clear {
+          margin-left: 13px;
+          -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+        #footer .start {
+          margin-right: 13px;
+        }
 }

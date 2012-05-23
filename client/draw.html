@@ -1,9 +1,12 @@
+<head>
+  <meta content="width=device-width, initial-scale=.5, maximum-scale=1" name="viewport" />
+</head>
 <body>
   <div id="page">
     <div id="left">
       <div id="outer-frame">
         {{>title}}
-        <canvas id="frame" width="600" height="450"></canvas>
+        <canvas id="frame" width="640" height="450"></canvas>
       </div>
       <div id="footer">
         {{> eraser}}
@@ -22,16 +25,14 @@
 </template>
 
 <template name="players">
-  <table id="players">
-    <tbody>
-      {{#each players}}
-        <tr>
-          <td class="name">{{name}}</td>
-          <td {{#if isDrawing}}class="drawing"{{/if}}></td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
+  <ul id="players">
+    {{#each players}}
+      <li class="row {{#if isDrawing}}row-drawing{{/if}}">
+        <span class="cell name">{{name}}</span>
+        <span class="cell {{#if isDrawing}}drawing{{/if}}"></span>
+      </li>
+    {{/each}}
+  </ul>
 </template>
 
 <template name="guess">
