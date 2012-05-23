@@ -125,11 +125,13 @@ Meteor.startup ->
   brush = new Brush(frame: frame, outerFrame: outerFrame, ctx: ctx, radius: RADIUS, packing: PACKING, aggressive: true)
 
   Meteor.autosubscribe ->
-    ctx.clearRect(0, 0, frame.width, frame.height)
-    Strokes.find({}).forEach (stroke) ->
-      brush.currentColor = stroke.color
-      _.each stroke.segments, (segment) ->
-        brush.drawSegment(segment.start, segment.end)
+    unless Session.get("brushIsActive")
+      console.log("Strokes updated. clearing canvas and redrawing all segments")
+      ctx.clearRect(0, 0, frame.width, frame.height)
+      Strokes.find({}).forEach (stroke) ->
+        brush.currentColor = stroke.color
+        _.each stroke.segments, (segment) ->
+          brush.drawSegment(segment.start, segment.end)
 
 Meteor.setInterval(->
   if Meteor.status().connected
