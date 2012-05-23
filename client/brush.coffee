@@ -10,7 +10,6 @@ class window.Brush
     @packing = opts.packing
     @currentColor = "#28d2f1" # sky blue
     @aggressive = opts.aggressive
-    @segments = []
     document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), @_mouseDownEvent)
 
   drawSegment: (start, end) ->
@@ -37,11 +36,17 @@ class window.Brush
     upFn = (e) =>
       document.removeEventListener((if @isTouch then 'touchmove' else 'mousemove'), @_move)
       document.removeEventListener((if @isTouch then 'touchend' else 'mouseup'), upFn)
-      @_flush() unless @aggressive
+      if @aggressive then @currentStrokeID = null else @_passiveFlush()
       @last = null
 
     document.addEventListener((if @isTouch then 'touchmove' else 'mousemove'), @_move)
     document.addEventListener((if @isTouch then 'touchend' else 'mouseup'), upFn)
+
+  _addSegment: (start, end) ->
+    if @aggressive
+      @_aggressiveFlush(start, end)
+    else
+      (@segments ||= []).push(start: start, end: end)
 
   _move: (e) =>
     e.preventDefault()
@@ -53,8 +58,7 @@ class window.Brush
 
     if @lastInFrame or inFrame
       @drawSegment(start, @last)
-      @segments.push(start: start, end: @last)
-      @_flush() if @aggressive
+      @_addSegment(start, @last)
 
     @last = start
     @lastInFrame = inFrame
@@ -71,9 +75,15 @@ class window.Brush
   _dist: (start, end) ->
     Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2))
 
-  _flush: ->
+  _passiveFlush: ->
     Strokes.insert(segments: @segments, color: @currentColor)
     @segments = []
+
+  _aggressiveFlush: (start, end) ->
+    if @currentStrokeID?
+      Strokes.update("#{@currentStrokeID}", $push: {segments: {start: start, end: end}})
+    else
+      @currentStrokeID = Strokes.insert(segments: [start: start, end: end], color: @currentColor)
 
   _active: ->
     Session.get("brushIsActive")
