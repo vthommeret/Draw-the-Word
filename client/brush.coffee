@@ -9,6 +9,7 @@ class window.Brush
     @radius = opts.radius
     @packing = opts.packing
     @currentColor = "#28d2f1" # sky blue
+    @aggressive = opts.aggressive
     @segments = []
     document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), @_mouseDownEvent)
 
@@ -33,32 +34,30 @@ class window.Brush
     e.preventDefault()
 
     # @currentColor = "rgb(#{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())})"
-
-    moveFn = @_move()
     upFn = (e) =>
-      document.removeEventListener((if @isTouch then 'touchmove' else 'mousemove'), moveFn)
+      document.removeEventListener((if @isTouch then 'touchmove' else 'mousemove'), @_move)
       document.removeEventListener((if @isTouch then 'touchend' else 'mouseup'), upFn)
-      @_flush()
+      @_flush() unless @aggressive
       @last = null
 
-    document.addEventListener((if @isTouch then 'touchmove' else 'mousemove'), moveFn)
+    document.addEventListener((if @isTouch then 'touchmove' else 'mousemove'), @_move)
     document.addEventListener((if @isTouch then 'touchend' else 'mouseup'), upFn)
 
-  _move: ->
-    (e) =>
-      e.preventDefault()
+  _move: (e) =>
+    e.preventDefault()
 
-      cursor = if @isTouch then x: e.touches[0].pageX, y: e.touches[0].pageY else x: e.clientX, y: e.clientY
+    cursor = if @isTouch then x: e.touches[0].pageX, y: e.touches[0].pageY else x: e.clientX, y: e.clientY
 
-      start = x: cursor.x - @outerFrame.offsetLeft, y: cursor.y - @outerFrame.offsetTop
-      inFrame = (e.target is @frame) or (e.target.parentElement is @outerFrame)
+    start = x: cursor.x - @outerFrame.offsetLeft, y: cursor.y - @outerFrame.offsetTop
+    inFrame = (e.target is @frame) or (e.target.parentElement is @outerFrame)
 
-      if @lastInFrame or inFrame
-        @drawSegment(start, @last)
-        @segments.push(start: start, end: @last)
+    if @lastInFrame or inFrame
+      @drawSegment(start, @last)
+      @segments.push(start: start, end: @last)
+      @_flush() if @aggressive
 
-      @last = start
-      @lastInFrame = inFrame
+    @last = start
+    @lastInFrame = inFrame
 
   _drawCircle: (x, y, radius) ->
     @ctx.save()
