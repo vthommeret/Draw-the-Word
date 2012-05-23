@@ -42,11 +42,6 @@ class window.Brush
     document.addEventListener((if @isTouch then 'touchmove' else 'mousemove'), @_move)
     document.addEventListener((if @isTouch then 'touchend' else 'mouseup'), upFn)
 
-  _addSegment: (start, end) ->
-    if @aggressive
-      @_aggressiveFlush(start, end)
-    else
-      (@segments ||= []).push(start: start, end: end)
 
   _move: (e) =>
     e.preventDefault()
@@ -62,6 +57,12 @@ class window.Brush
 
     @last = start
     @lastInFrame = inFrame
+
+  _addSegment: (start, end) ->
+    if @aggressive
+      @_aggressiveFlush(start, end)
+    else
+      (@segments ||= []).push(start: start, end: end)
 
   _drawCircle: (x, y, radius) ->
     @ctx.save()
