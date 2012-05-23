@@ -117,8 +117,7 @@ Meteor.startup ->
   frame = document.getElementById('frame')
   outerFrame = document.getElementById('outer-frame')
   ctx = frame.getContext('2d')
-  brush = new Brush()
-  brush.initialize(frame: frame, outerFrame: outerFrame, ctx: ctx, radius: RADIUS, packing: PACKING, aggressive: true)
+  brush = new Brush(frame: frame, outerFrame: outerFrame, ctx: ctx, radius: RADIUS, packing: PACKING, aggressive: true)
 
   Meteor.autosubscribe ->
     ctx.clearRect(0, 0, frame.width, frame.height)

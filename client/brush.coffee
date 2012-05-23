@@ -1,5 +1,5 @@
 class window.Brush
-  initialize: (opts) ->
+  constructor: (opts) ->
     @isTouch = document.hasOwnProperty('ontouchstart')
     @last = null
     @lastInFrame = true
