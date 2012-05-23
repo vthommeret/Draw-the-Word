@@ -55,7 +55,7 @@ Template.guess.events =
   'submit #guess-form': (e) ->
     e.preventDefault()
     guess = $('#guess')
-    guess.val('');
+    guess.val('')
     guess.blur()
 
 Template.guess.isDrawing = ->
