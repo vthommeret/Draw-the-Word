@@ -8,9 +8,11 @@ class window.Brush
     @ctx = opts.ctx
     @radius = opts.radius
     @packing = opts.packing
-    @currentColor = "#28d2f1" # sky blue
-    @aggressive = opts.aggressive
+    @currentColor = "rgba(40, 210, 241, 1)" # sky blue
+    @startTime = null
+    @segments = []
     document.addEventListener((if @isTouch then 'touchstart' else 'mousedown'), @_mouseDownEvent)
+    @justDrew = false
 
   drawSegment: (start, end) ->
     r = @radius
@@ -27,21 +29,36 @@ class window.Brush
         )
     else @_drawCircle(start.x, start.y, r)
 
+  # This is pretty hacky, but we use this to avoid double drawing.
+  # A better solution would to have a hash of drawn strokes keyed
+  # against stroke IDs, but we can't get the ID until we've already
+  # inserted a stroke and the drawing happens
+  didDraw: ->
+    if @justDrew
+      @justDrew = false
+      return true
+    else
+      return @justDrew # false
+
   _mouseDownEvent: (e) =>
     return unless @_active()
     return if e.target isnt @frame
     e.preventDefault()
 
+    @startTime = e.timeStamp
+
     # @currentColor = "rgb(#{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())} , #{Math.floor(255 * Math.random())})"
     upFn = (e) =>
       document.removeEventListener((if @isTouch then 'touchmove' else 'mousemove'), @_move)
       document.removeEventListener((if @isTouch then 'touchend' else 'mouseup'), upFn)
-      if @aggressive then @currentStrokeID = null else @_passiveFlush()
+
+      @_flush()
+
       @last = null
+      @startTime = null
 
     document.addEventListener((if @isTouch then 'touchmove' else 'mousemove'), @_move)
     document.addEventListener((if @isTouch then 'touchend' else 'mouseup'), upFn)
-
 
   _move: (e) =>
     e.preventDefault()
@@ -53,16 +70,10 @@ class window.Brush
 
     if @lastInFrame or inFrame
       @drawSegment(start, @last)
-      @_addSegment(start, @last)
+      @segments.push(start: start, end: @last, time: e.timeStamp - @startTime)
 
     @last = start
     @lastInFrame = inFrame
-
-  _addSegment: (start, end) ->
-    if @aggressive
-      @_aggressiveFlush(start, end)
-    else
-      (@segments ||= []).push(start: start, end: end)
 
   _drawCircle: (x, y, radius) ->
     @ctx.save()
@@ -76,15 +87,10 @@ class window.Brush
   _dist: (start, end) ->
     Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2))
 
-  _passiveFlush: ->
-    Strokes.insert(segments: @segments, color: @currentColor)
+  _flush: ->
+    @justDrew = true
+    strokeId = Strokes.insert(segments: @segments, color: @currentColor)
     @segments = []
-
-  _aggressiveFlush: (start, end) ->
-    if @currentStrokeID?
-      Strokes.update("#{@currentStrokeID}", $push: {segments: {start: start, end: end}})
-    else
-      @currentStrokeID = Strokes.insert(segments: [start: start, end: end], color: @currentColor)
 
   _active: ->
     Session.get("brushIsActive")

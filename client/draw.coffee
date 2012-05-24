@@ -61,6 +61,42 @@ Template.guess.events =
 Template.guess.isDrawing = ->
   Session.get('brushIsActive')
 
+# Timer queue
+
+# TODO: Clear out timers from @timers when done.
+# TODO: Separate @timers array necessary?
+class TimerQueue
+  constructor: ->
+    @queue = []
+    @timers = []
+    @running = false
+
+  add: (timers) ->
+    @queue.push(timers)
+
+  run: ->
+    return if not @queue.length or @running
+    @running = true
+    timers = @queue.shift()
+    _.each(timers, (timer, i) =>
+      if i is timers.length - 1
+        fn = =>
+          @running = false
+          timer.fn()
+          @run()
+      else
+        fn = timer.fn
+      @timers.push(setTimeout(fn, timer.time))
+    )
+
+  clear: ->
+    @queue = []
+    _.each(@timers, (timer) ->
+      clearTimeout timer
+    )
+    @timers = []
+    @running = false
+
 # Spinner
 
 class Spinner
@@ -123,15 +159,23 @@ Meteor.startup ->
   outerFrame = document.getElementById('outer-frame')
   ctx = frame.getContext('2d')
   brush = new Brush(frame: frame, outerFrame: outerFrame, ctx: ctx, radius: RADIUS, packing: PACKING, aggressive: true)
+  timerQueue = new TimerQueue()
 
-  Meteor.autosubscribe ->
-    unless Session.get("brushIsActive")
-      console.log("Strokes updated. clearing canvas and redrawing all segments")
+  Strokes.find({}).observe(
+    added: (stroke) ->
+      return if brush.didDraw()
+      timers = []
+      _.each stroke.segments, (segment) ->
+        timers.push(
+          fn: -> brush.drawSegment(segment.start, segment.end),
+          time: segment.time
+        )
+      timerQueue.add(timers)
+      timerQueue.run()
+    removed: ->
+      timerQueue.clear()
       ctx.clearRect(0, 0, frame.width, frame.height)
-      Strokes.find({}).forEach (stroke) ->
-        brush.currentColor = stroke.color
-        _.each stroke.segments, (segment) ->
-          brush.drawSegment(segment.start, segment.end)
+  )
 
 Meteor.setInterval(->
   if Meteor.status().connected
