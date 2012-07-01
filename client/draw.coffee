@@ -61,63 +61,6 @@ Template.guess.events =
 Template.guess.isDrawing = ->
   Session.get('brushIsActive')
 
-# Timer queue
-
-# TODO: Clear out timers from @timers when done.
-# TODO: Separate @timers array necessary?
-class TimerQueue
-  constructor: ->
-    @queue = []
-    @timers = []
-    @running = false
-
-  add: (timers) ->
-    @queue.push(timers)
-
-  run: ->
-    return if not @queue.length or @running
-    @running = true
-    timers = @queue.shift()
-    _.each(timers, (timer, i) =>
-      if i is timers.length - 1
-        fn = =>
-          @running = false
-          timer.fn()
-          @run()
-      else
-        fn = timer.fn
-      @timers.push(setTimeout(fn, timer.time))
-    )
-
-  clear: ->
-    @queue = []
-    _.each(@timers, (timer) ->
-      clearTimeout timer
-    )
-    @timers = []
-    @running = false
-
-# Spinner
-
-class Spinner
-  constructor: (@el, @frames) ->
-    @height = @el.height()
-    @frame = 0
-    @timer = null
-
-  start: ->
-    @timer = setInterval =>
-      @frame = 0 if @frame > @frames - 1
-      @el.css 'background-position', '0 -' + (@height * @frame) + 'px'
-      @frame++
-    , 100
-    @el.addClass 'show'
-
-  stop: ->
-    return unless @timer?
-    clearInterval @timer
-    @timer = null
-    @el.addClass 'show'
 
 # Startup
 
