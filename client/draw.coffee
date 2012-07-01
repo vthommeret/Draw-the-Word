@@ -104,6 +104,8 @@ Meteor.startup ->
   brush = new Brush(frame: frame, outerFrame: outerFrame, ctx: ctx, radius: RADIUS, packing: PACKING, aggressive: true)
   timerQueue = new TimerQueue()
 
+  Meteor.subscribe("allstrokes")
+
   Strokes.find({}).observe(
     added: (stroke) ->
       return if brush.didDraw()
