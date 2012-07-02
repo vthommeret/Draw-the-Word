@@ -111,12 +111,6 @@ body {
         font-family: "HelveticaNeue";
         font-size: 18px;
         outline: none;
-
-        /** TEMP */
-
-        position: absolute;
-        top: -10000px;
-        left: -10000px;
       }
       #page #right #guess[disabled] {
         opacity: .3;
