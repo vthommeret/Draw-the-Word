@@ -27,15 +27,6 @@ Template.eraser.events =
   'click .clear': (e) ->
     Events.clearCanvas()
 
-# Start template
-
-Template.start.events =
-  'click .start': (e) =>
-    Events.switchUser()
-
-Template.start.startButtonEnabled = ->
-  not activeUser()
-
 # Players template
 
 Template.players.players = ->

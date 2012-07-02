@@ -65,15 +65,6 @@ body {
         #footer .clear[disabled]:active {
           background-position: 0 0;
         }
-        #footer .start {
-          width: 90px;
-          position: relative;
-          top: 10px;
-          float: right;
-        }
-        #footer .start[disabled] {
-          opacity: .4;
-        }
     #page #right {
       margin: 76px 0 0 39px;
       float: left;
