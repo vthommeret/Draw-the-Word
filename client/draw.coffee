@@ -25,16 +25,13 @@ Template.eraser.startButtonEnabled = startButtonEnabled
 
 Template.eraser.events =
   'click .clear': (e) ->
-    Strokes.remove({})
-    frame = document.getElementById("frame")
-    ctx = frame.getContext("2d")
-    ctx.clearRect(0, 0, frame.width, frame.height)
+    Events.clearCanvas()
 
 # Start template
 
 Template.start.events =
   'click .start': (e) =>
-    Rooms.update("#{Session.get("currentRoomID")}", {$set: activePlayerID: Session.get("currentPlayerID")})
+    Events.switchUser()
 
 Template.start.startButtonEnabled = startButtonEnabled
 
@@ -103,6 +100,7 @@ Meteor.startup ->
   ctx = frame.getContext('2d')
   brush = new Brush(frame: frame, outerFrame: outerFrame, ctx: ctx, radius: RADIUS, packing: PACKING, aggressive: true)
   timerQueue = new TimerQueue()
+  new GuessBox(el: $("#guess-form"))
 
   Meteor.subscribe("allstrokes")
 
