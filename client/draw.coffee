@@ -2,6 +2,9 @@
 
 Session.set('currentWord', 'Crayon')
 
+activeUser = ->
+  Session.get("brushIsActive")
+
 Template.title.text = ->
   word = Session.get('currentWord')
   if Session.get('brushIsActive')
@@ -14,14 +17,11 @@ Template.title.text = ->
     blanks
 
 Template.title.isBlank = ->
-  not Session.get('brushIsActive')
+  not activeUser()
 
 # Eraser template
 
-startButtonEnabled = ->
-  not Session.get("brushIsActive")
-
-Template.eraser.startButtonEnabled = startButtonEnabled
+Template.eraser.eraserEnabled = activeUser
 
 Template.eraser.events =
   'click .clear': (e) ->
@@ -33,7 +33,8 @@ Template.start.events =
   'click .start': (e) =>
     Events.switchUser()
 
-Template.start.startButtonEnabled = startButtonEnabled
+Template.start.startButtonEnabled = ->
+  not activeUser()
 
 # Players template
 

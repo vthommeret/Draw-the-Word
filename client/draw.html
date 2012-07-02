@@ -42,7 +42,7 @@
 </template>
 
 <template name="eraser">
-  <button class="clear" {{#if startButtonEnabled}}disabled="disabled"{{/if}}></button>
+  <button class="clear" {{#unless eraserEnabled}}disabled="disabled"{{/unless}}></button>
 </template>
 
 <template name="start">
