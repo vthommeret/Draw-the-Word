@@ -10,7 +10,6 @@
       </div>
       <div id="footer">
         {{> eraser}}
-        {{> start}}
       </div>
     </div>
     <div id="right">
@@ -36,15 +35,11 @@
 </template>
 
 <template name="guess">
-  <form id="guess-form">
+  <form id="guess-form" action="javascript:void(0);">
     <input id="guess" type="text" placeholder="Guess the word" {{#if isDrawing}}disabled="disabled"{{/if}}>
   </form>
 </template>
 
 <template name="eraser">
-  <button class="clear" {{#if startButtonEnabled}}disabled="disabled"{{/if}}></button>
-</template>
-
-<template name="start">
-  <input type="button" value="Start drawing" class="start" {{#unless startButtonEnabled}} disabled="disabled" {{/unless}} />
+  <button class="clear" {{#unless eraserEnabled}}disabled="disabled"{{/unless}}></button>
 </template>

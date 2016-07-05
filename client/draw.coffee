@@ -2,6 +2,9 @@
 
 Session.set('currentWord', 'Crayon')
 
+activeUser = ->
+  Session.get("brushIsActive")
+
 Template.title.text = ->
   word = Session.get('currentWord')
   if Session.get('brushIsActive')
@@ -14,29 +17,15 @@ Template.title.text = ->
     blanks
 
 Template.title.isBlank = ->
-  not Session.get('brushIsActive')
+  not activeUser()
 
 # Eraser template
 
-startButtonEnabled = ->
-  not Session.get("brushIsActive")
-
-Template.eraser.startButtonEnabled = startButtonEnabled
+Template.eraser.eraserEnabled = activeUser
 
 Template.eraser.events =
   'click .clear': (e) ->
-    Strokes.remove({})
-    frame = document.getElementById("frame")
-    ctx = frame.getContext("2d")
-    ctx.clearRect(0, 0, frame.width, frame.height)
-
-# Start template
-
-Template.start.events =
-  'click .start': (e) =>
-    Rooms.update("#{Session.get("currentRoomID")}", {$set: activePlayerID: Session.get("currentPlayerID")})
-
-Template.start.startButtonEnabled = startButtonEnabled
+    Events.clearCanvas()
 
 # Players template
 
@@ -61,63 +50,6 @@ Template.guess.events =
 Template.guess.isDrawing = ->
   Session.get('brushIsActive')
 
-# Timer queue
-
-# TODO: Clear out timers from @timers when done.
-# TODO: Separate @timers array necessary?
-class TimerQueue
-  constructor: ->
-    @queue = []
-    @timers = []
-    @running = false
-
-  add: (timers) ->
-    @queue.push(timers)
-
-  run: ->
-    return if not @queue.length or @running
-    @running = true
-    timers = @queue.shift()
-    _.each(timers, (timer, i) =>
-      if i is timers.length - 1
-        fn = =>
-          @running = false
-          timer.fn()
-          @run()
-      else
-        fn = timer.fn
-      @timers.push(setTimeout(fn, timer.time))
-    )
-
-  clear: ->
-    @queue = []
-    _.each(@timers, (timer) ->
-      clearTimeout timer
-    )
-    @timers = []
-    @running = false
-
-# Spinner
-
-class Spinner
-  constructor: (@el, @frames) ->
-    @height = @el.height()
-    @frame = 0
-    @timer = null
-
-  start: ->
-    @timer = setInterval =>
-      @frame = 0 if @frame > @frames - 1
-      @el.css 'background-position', '0 -' + (@height * @frame) + 'px'
-      @frame++
-    , 100
-    @el.addClass 'show'
-
-  stop: ->
-    return unless @timer?
-    clearInterval @timer
-    @timer = null
-    @el.addClass 'show'
 
 # Startup
 
@@ -160,6 +92,9 @@ Meteor.startup ->
   ctx = frame.getContext('2d')
   brush = new Brush(frame: frame, outerFrame: outerFrame, ctx: ctx, radius: RADIUS, packing: PACKING, aggressive: true)
   timerQueue = new TimerQueue()
+  new GuessBox(el: $("#guess-form"))
+
+  Meteor.subscribe("allstrokes")
 
   Strokes.find({}).observe(
     added: (stroke) ->

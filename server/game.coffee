@@ -5,6 +5,9 @@ Meteor.startup ->
   Meteor.publish "allrooms", ->
     Rooms.find({})
 
+  Meteor.publish "allstrokes", ->
+    Strokes.find({})
+
 Meteor.setInterval(->
   now = new Date().getTime()
   remove_threshold = now - 20 * 1000 # 20 seconds

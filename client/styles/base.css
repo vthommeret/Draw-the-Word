@@ -65,15 +65,6 @@ body {
         #footer .clear[disabled]:active {
           background-position: 0 0;
         }
-        #footer .start {
-          width: 90px;
-          position: relative;
-          top: 10px;
-          float: right;
-        }
-        #footer .start[disabled] {
-          opacity: .4;
-        }
     #page #right {
       margin: 76px 0 0 39px;
       float: left;
@@ -111,12 +102,6 @@ body {
         font-family: "HelveticaNeue";
         font-size: 18px;
         outline: none;
-
-        /** TEMP */
-
-        position: absolute;
-        top: -10000px;
-        left: -10000px;
       }
       #page #right #guess[disabled] {
         opacity: .3;
